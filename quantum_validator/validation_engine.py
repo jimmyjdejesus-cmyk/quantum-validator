@@ -7,6 +7,7 @@ for ultra-high precision data validation.
 
 from typing import Any, Dict, List, Optional, Union
 import logging
+import numpy as np
 from dataclasses import dataclass
 from enum import Enum
 
@@ -176,6 +177,9 @@ class QBHValidationEngine:
         
         # Calculate weighted confidence score
         confidence_scores = [r.confidence_score for r in results]
+        # Handle NaN values
+        confidence_scores = [score if not np.isnan(score) else 0.0 for score in confidence_scores]
+        
         if self.mode == ValidationMode.HYBRID:
             # Weight quantum and holographic results higher for hybrid mode
             weights = [1.0]  # Classical baseline
@@ -191,6 +195,10 @@ class QBHValidationEngine:
             final_confidence = weighted_sum / weight_sum
         else:
             final_confidence = sum(confidence_scores) / len(confidence_scores)
+        
+        # Ensure final confidence is valid
+        if np.isnan(final_confidence) or final_confidence < 0:
+            final_confidence = 0.0
         
         return ValidationResult(
             is_valid=is_valid,

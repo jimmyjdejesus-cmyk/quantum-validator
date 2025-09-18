@@ -351,8 +351,15 @@ class HolographicValidator:
         """Encode data holographically using basis vector."""
         # Ensure vectors have compatible dimensions
         min_len = min(len(data_vector), len(basis_vector))
+        if min_len == 0:
+            return np.array([0.0])
+            
         data_truncated = data_vector[:min_len]
         basis_truncated = basis_vector[:min_len]
+        
+        # Handle NaN and inf values
+        data_truncated = np.nan_to_num(data_truncated, nan=0.0, posinf=1.0, neginf=-1.0)
+        basis_truncated = np.nan_to_num(basis_truncated, nan=0.0, posinf=1.0, neginf=-1.0)
         
         # Holographic encoding: interference pattern between data and basis
         interference = data_truncated * basis_truncated
@@ -492,7 +499,13 @@ class HolographicValidator:
             redundancy_score,
             consistency_score
         ]
+        # Handle NaN values in confidence components
+        confidence_components = [score if not np.isnan(score) else 0.0 for score in confidence_components]
         confidence_score = np.mean(confidence_components)
+        
+        # Ensure confidence score is valid
+        if np.isnan(confidence_score):
+            confidence_score = 0.0
         
         # Holographic integrity as overall system coherence
         holographic_integrity = (
@@ -500,6 +513,10 @@ class HolographicValidator:
             redundancy_score * 0.3 +
             consistency_score * 0.3
         )
+        
+        # Ensure holographic integrity is valid
+        if np.isnan(holographic_integrity):
+            holographic_integrity = 0.0
         
         return HolographicValidationResult(
             is_valid=is_valid,

@@ -26,73 +26,74 @@ except ImportError:
 
 
 # Request/Response models
-class ValidationRequest(BaseModel):
-    """Request model for validation endpoint."""
-    data: Any = Field(..., description="Data to validate")
-    schema: Optional[Dict[str, Any]] = Field(None, description="Optional validation schema")
-    mode: str = Field("hybrid", description="Validation mode", regex="^(classical|quantum|bio|holographic|hybrid)$")
-    enable_monitoring: bool = Field(True, description="Enable performance monitoring")
-    
-    class Config:
-        schema_extra = {
-            "example": {
-                "data": {"transaction_id": "txn_001", "amount": 1500.00},
-                "schema": {"required_fields": ["transaction_id", "amount"]},
-                "mode": "hybrid",
-                "enable_monitoring": True
+if FASTAPI_AVAILABLE:
+    class ValidationRequest(BaseModel):
+        """Request model for validation endpoint."""
+        data: Any = Field(..., description="Data to validate")
+        schema: Optional[Dict[str, Any]] = Field(None, description="Optional validation schema")
+        mode: str = Field("hybrid", description="Validation mode", regex="^(classical|quantum|bio|holographic|hybrid)$")
+        enable_monitoring: bool = Field(True, description="Enable performance monitoring")
+        
+        class Config:
+            schema_extra = {
+                "example": {
+                    "data": {"transaction_id": "txn_001", "amount": 1500.00},
+                    "schema": {"required_fields": ["transaction_id", "amount"]},
+                    "mode": "hybrid",
+                    "enable_monitoring": True
+                }
             }
-        }
 
 
-class ValidationResponse(BaseModel):
-    """Response model for validation endpoint."""
-    request_id: str
-    is_valid: bool
-    confidence_score: float
-    quantum_coherence: Optional[float] = None
-    biological_resilience: Optional[float] = None
-    holographic_integrity: Optional[float] = None
-    validation_path: List[str]
-    processing_time_ms: float
-    mode: str
-    error_details: Optional[Dict[str, Any]] = None
-    
-    class Config:
-        schema_extra = {
-            "example": {
-                "request_id": "req_123456",
-                "is_valid": True,
-                "confidence_score": 0.892,
-                "quantum_coherence": 0.815,
-                "biological_resilience": 0.923,
-                "holographic_integrity": 0.867,
-                "validation_path": ["QBH_ENGINE_START", "CLASSICAL_VALIDATION", "QUANTUM_VALIDATION"],
-                "processing_time_ms": 125.3,
-                "mode": "hybrid"
+    class ValidationResponse(BaseModel):
+        """Response model for validation endpoint."""
+        request_id: str
+        is_valid: bool
+        confidence_score: float
+        quantum_coherence: Optional[float] = None
+        biological_resilience: Optional[float] = None
+        holographic_integrity: Optional[float] = None
+        validation_path: List[str]
+        processing_time_ms: float
+        mode: str
+        error_details: Optional[Dict[str, Any]] = None
+        
+        class Config:
+            schema_extra = {
+                "example": {
+                    "request_id": "req_123456",
+                    "is_valid": True,
+                    "confidence_score": 0.892,
+                    "quantum_coherence": 0.815,
+                    "biological_resilience": 0.923,
+                    "holographic_integrity": 0.867,
+                    "validation_path": ["QBH_ENGINE_START", "CLASSICAL_VALIDATION", "QUANTUM_VALIDATION"],
+                    "processing_time_ms": 125.3,
+                    "mode": "hybrid"
+                }
             }
-        }
 
 
-class HealthResponse(BaseModel):
-    """Response model for health check endpoint."""
-    status: str
-    timestamp: str
-    version: str
-    quantum_backend_available: bool
-    ml_backend_available: bool
-    active_validations: int
-    total_validations: int
+    class HealthResponse(BaseModel):
+        """Response model for health check endpoint."""
+        status: str
+        timestamp: str
+        version: str
+        quantum_backend_available: bool
+        ml_backend_available: bool
+        active_validations: int
+        total_validations: int
 
 
-class PerformanceResponse(BaseModel):
-    """Response model for performance metrics endpoint."""
-    total_validations: int
-    successful_validations: int
-    failed_validations: int
-    success_rate: float
-    average_duration_ms: float
-    average_confidence: float
-    mode_distribution: Dict[str, int]
+    class PerformanceResponse(BaseModel):
+        """Response model for performance metrics endpoint."""
+        total_validations: int
+        successful_validations: int
+        failed_validations: int
+        success_rate: float
+        average_duration_ms: float
+        average_confidence: float
+        mode_distribution: Dict[str, int]
 
 
 # Initialize FastAPI app
