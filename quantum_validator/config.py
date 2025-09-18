@@ -5,7 +5,7 @@ Following Protocol 03: Secure Code Implementation
 This module provides configuration management for the quantum-validator.
 """
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field
 from pathlib import Path
 import json

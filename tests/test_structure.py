@@ -51,6 +51,7 @@ def test_package_structure():
 
 def test_file_contents():
     """Test that key files have expected content."""
+    import os
     base_dir = "/home/runner/work/quantum-validator/quantum-validator"
     
     # Test README has quantum-validator content
