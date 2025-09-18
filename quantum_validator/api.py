@@ -30,15 +30,15 @@ if FASTAPI_AVAILABLE:
     class ValidationRequest(BaseModel):
         """Request model for validation endpoint."""
         data: Any = Field(..., description="Data to validate")
-        schema: Optional[Dict[str, Any]] = Field(None, description="Optional validation schema")
-        mode: str = Field("hybrid", description="Validation mode", regex="^(classical|quantum|bio|holographic|hybrid)$")
+        validation_schema: Optional[Dict[str, Any]] = Field(None, description="Optional validation schema")
+        mode: str = Field("hybrid", description="Validation mode", pattern="^(classical|quantum|bio|holographic|hybrid)$")
         enable_monitoring: bool = Field(True, description="Enable performance monitoring")
         
         class Config:
-            schema_extra = {
+            json_schema_extra = {
                 "example": {
                     "data": {"transaction_id": "txn_001", "amount": 1500.00},
-                    "schema": {"required_fields": ["transaction_id", "amount"]},
+                    "validation_schema": {"required_fields": ["transaction_id", "amount"]},
                     "mode": "hybrid",
                     "enable_monitoring": True
                 }
@@ -59,7 +59,7 @@ if FASTAPI_AVAILABLE:
         error_details: Optional[Dict[str, Any]] = None
         
         class Config:
-            schema_extra = {
+            json_schema_extra = {
                 "example": {
                     "request_id": "req_123456",
                     "is_valid": True,
@@ -116,9 +116,9 @@ if FASTAPI_AVAILABLE:
     )
     
     # Global validation engine and monitor
-    from ..validation_engine import QBHValidationEngine, ValidationMode
-    from ..monitoring import PerformanceMonitor
-    from .. import __version__
+    from quantum_validator.validation_engine import QBHValidationEngine, ValidationMode
+    from quantum_validator.monitoring import PerformanceMonitor
+    from quantum_validator import __version__
     
     validation_engine = None
     performance_monitor = None
